@@ -1,0 +1,242 @@
+패키지 설치
+우분투	dgkg -i 		apt install
+록키리눅스	rpm -i		dnf install = yum install
+		의존성 문제
+
+패키지 제거
+		dpkg -r		apt remove
+		rpm -e		dnf remove
+		
+rpm -Uvh	Ugrade 또는 Install
+rpm -ivh	Install
+
+아키텍처
+i386, i486, i586, i686		32비트 CPU
+x86_64				64비트 CPU
+alpha/sparc/ia64			특수 CPU
+src					소스파일 패키지, 별도 컴파일 요구
+noarch				모든 CPU에 설치 가능
+
+패키지 조회
+rpm -qa	설치 여부 확인
+rpm -qi	설치된 패키지 상세 정보
+rpm -ql	설치된 패키지 포함 파일 정보
+
+설치되지 않은 rpm 파일 조회
+rpm -qip	패키지 상세 정보
+rpm -qlp	패키지 포함 파일 정보
+
+rpm의 단점: 다운로드받아야 있다(파일 미리 존재). 의존성 문제
+	
+rpm --force 	강제 설치
+rpm --nodeps	의존성 무시 설치
+=====
+DNF(Dnadified Yum)
+
+/etc/yum.repos.d
+
+repository: 저장소
+
+URL: Uniform Resource Locators	인터넷 경로
+	프로토콜://호스트주소/경로위치
+	https://www.naver.com/land.html
+UNC: Universal Naming Convention	MS 네트워크 경로
+	\\호스트주소\경로
+	\\10.11.82.61\dwit
+
+dnf install 패키지명
+dnf update 패키지명
+dnf remove 패키지명
+======
+dnf info 패키지명
+dnf search 문자열: 원하는 패키지를 검색할 때
+dnf provides 파일이름
+
+dnf install --nogpgcheck 파일이름.rpm
+dnf clean all
+
+패키지 >= 프로그램
+=====
+xz > bzip2 > gzip, zip
+
+xz 파일명
+xz -d 압축파일명 		unxz
+bzip2 파일명
+bzip2 -d 압축파일명	bunzip2
+gzip 파일명
+gzip -d 압축파일명	gunzip
+
+zip, unzip
+======
+묶기 + 압축
+tar cvf
+tar xvf
+tar tvf
+tar rvf
+-----
++ Jjz
+tar cvfJ = tar + xz
+tar cvfj = tar + bzip2
+tar cvfz = tar + gzip
+tar xvfJ = tar + unxz
+tar xvfj = tar + bunzip2
+tar xvfz = tar + gunzip
+=====
+파일 검색
+find
+	find 경로 옵션 (액션)
+	액션	-exec, -ok, -print, -ls
+locate
++ updatedb
+-----
+which		실행파일 위치
+whereis	실행파일 + 메뉴얼 위치
+
+timedatectl list-timezones
+timedatectl set-timezone Asia/Seoul
+timedatectl
+
+방화벽 설정
+firewall-cmd
+firewall-config
+
+ntsysv -> 윈도우: services.msc
+=====
+작업 예약
+at: 단발성
+cron: 주기적
+
+분 시 일 월 요일 사용자 명령
+				cp -r /home /backup
+
+rdate -s time.bora.net
+	보라넷에 있는 타임서버의 시간을 맞춰라.
+	원격 서버의 시간을 맞추는 명령어
+
+crontab -e: 작업 예약
+crontab -l:  예약 작업 확인
+crontab -r:        //     삭제
+
+cron.allow	미존재(허용 리스트)
+cron.deny	존재(거부 리스트)
+cron.allow > cron.deny
+2개 파일 모두 없으면 root만 사용 가능
+
+at 시간및날짜.
+at -l	= atq
+at -d	= atrm
+
+at.allow	미존재(허용 리스트)
+at.deny	존재(거부 리스트)
+at.allow > at.deny
+2개 파일 모두 없으면 root만 사용 가능
+=====
+네트워크 필수 개념
+
+프로토콜	컴퓨터 사이의 언어
+TCP/IP	인터넷 프로토콜
+Host		네트워크 상에서 주소를 갖고 있는 컴퓨터
+Host Name		www
+Domain Name	mjc.ac.kr
+FQDN=Fully Qualified Domain Name = Host Name + Domain Name
+	www.mjc.ac.kr
+IP 주소(IPv4, IPv6)
+	32비트 = 8비트.8비트.8비트.8비트
+	8비트: 0 - 255(256개)
+	192.168.111.100
+	A Class	n.h.h.h	= 256^3	0-127
+	B Class	n.n.h.h	= 256^2	128-191
+	C Class	n.n.n.h	= 256		192-223
+        =====
+	D Class	멀티캐스트			224-239
+	E Class	실험용			240-
+주소
+- 공인주소
+- 사설주소
+	A: 10.x.x.x
+	B: 172.16.x.x - 172.31.x.x
+	C: 192.168.x.x
+
+APIPA(Automatic Private IP Addressing)
+	169.254.x.x
+	인터넷은 통신 안되나, 같은 169.254 네트워크 내부에선 통신
+	주소를 자동설정했으나 DHCP server가 작동되지 않아
+	주소를 받아오지 못할 경우 운영체제 스스로 만들어내는 주소
+
+네트워크 주소 = 네트워크 ID
+	각 네트워크의 첫번째 주소
+	192.168.111.100 -> 192.168.111.0
+	172.16.10.10 -> 172.16.0.0
+	10.10.10.10 -> 10.0.0.0
+
+Netmask = Subnet Mask
+	네트워크 주소와 호스트 주소를 구분
+	기본 서브넷마스크과 사용자 정의 서브넷마스크
+	기본 서브넷마스크
+	A: 255.0.0.0
+	B: 255.255.0.0
+	C: 255.255.255.0
+
+브로드캐스트 주소 = 해당 네트워크의 마지막 주소
+	192.168.111.255
+	172.16.255.255
+	10.255.255.255
+
+게이트웨이 = 라우터
+
+DNS 서버
+: 호스트네임을 IP 주소로 이름풀이해주는 컴퓨터
+	호스트네임 -> IP 주소
+DNS Server 설정 위치: /etc/resolv.conf
+
+리눅스 네트워크 장치 이름
+ens160: 가상머신소프트웨어, 리눅스 버전에 따라 달라진다.
+
+nmtui
+
+ping IP주소
+ping 호스트네임
+
+
+네트워크 설정 관련 주요 파일
+/etc/NetworkManager/system-connections/ens160.nmconnection
+/etc/resolv.conf
+/etc/hosts
+
+레드햇계열 보안
+: 방화벽, SELinux
+
+SELinux: 시스템 침입에 성공하더라도 침입한 경로의 앱 이상의 권한을 얻지 못하도록 하는 보안 기술
+sestatus
+getenforce
+setenforce 0	Permissive
+setenforce 1	Enforcing
+vi /etc/sysconfig/selinux
+
+enable: 
+	enforcing 모드: 감지되면 해당 기능 작동 정지
+	permissive 모드: 감지되어도 허용은 하나 로그에 기록, 출력
+disable
+=====
+Pipe: 2개의 명령어를 연결
+	앞 명령어의 출력 결과를 뒤 명령어의 입력으로 받아들인다.
+	A명령어 | B명령어
+Filter: 필요한 것만 걸러주는 기능
+	파이프와 같이 주로 사용
+	A명령어 | grep 문자열
+Redirection: 표준 입출력 방향 전환
+	표준입력: 키보드 0
+	표준출력: 모니터 1
+	표준에러: 모니터 2
+	>, >>, <
+	sort < list.txt 
+	sort list.txt
+	sort < list.txt > out.txt
+	sort list.txt > out.txt
+
+Foreground Process
+
+작업번호: 현재 실행되는 백그라운 프로세스의 순차번호
+
+
+
