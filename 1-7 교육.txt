@@ -1,0 +1,123 @@
+서비스 = Daemon = 서버 프로세스(백그라운드)
+
+서버 프로세스
+- 서비스	항상	서버 프로세스
+- 소켓		필요시만 	서버 프로세스
+
+systemctl {start | stop | restart | enable | disable | status} 서비스명
+systemctl enable --now 서비스명 = start + enable
+/usr/lib/systemd/system/
+
+예전 xinetd -> R9 socket
+
+응급복구방법: root 암호 초기화
+
+mount -o remount,rw /
+passwd
+
+GRUB: 부트로더		LILO
+GNOME: 데스크톱 환경	KDE
+
+/etc/default/grub
+grub2-mkconfig
+
+X Window Application
+파일브라우저 - nautilus
+DVD 레코딩 - 브라세로
+메일클라이언트 - 에볼루션
+멀티미디어 플레이어 - VLC
+문서뷰어 - evince
+PDF 뷰어 - Foxit Reader
+그래픽 편집 - GIMP
+그림 뷰어 - eog
+LibreOffice 
+	Writer: 워드
+	Calc: 엑셀(스프레드시트)
+	Impress: 파워포인트(프레젠테이션 툴)
+=====
+하드디스크
+/dev/sda
+-----
+하드디스크 추가 설치 순서
+1. 물리적 추가
+2. 파티션 생성
+	fdisk /dev/sdb
+3. 파일시스템 생성 = 포맷
+	리눅스 파일시스템: xfs, ext4
+	mkfs -t ext4 /dev/sdb1
+4. 마운트
+	mkdir /mydata
+	mount /dev/sdb1 /mydata
+5. /etc/fstab 설정
+	vi /etc/fstab
+	장치명   마운트포인트   파일시스템   옵션   덤프   체크 
+	장치명, UUID, 라벨
+	덤프: 0, 1
+	체크: 0(체크 안함, 1(루트파티션), 2(루트 제외 나머지 파티션)
+
+RAID(Redundent Array of Inexpensive Disks) 
+<-> SLED(Single Large Expensive Disk)
+
+Fault Tolerance(결함허용, 오류제어)
+Linear RAID(Span Volume): 서로 다른 크기의 디스크, 2-32, 순차저장
+	FT 기능 X
+RAID 0: 동일사이즈, 2-32, 순차저장, FT x, 속도 빠르다.
+	Stripe Volume
+RAID 1: 동일사이즈, 2, 동시저장, 디스크저장 효율 x(1/2), FT o
+	Mirror Volume
+RAID 5: 동일사이즈, 3-32, Parity, 저장효율 n-1, FT o
+	Stripe with parity
+RAID 6: 동일사이즈, 4-32, Parity, 저장효율 n-2, FT o
+조합: 1+0, 1+6, 
+=====
+RAID 구성 단계
+1. 물리적 추가
+2. 파티션 생성
+	fdisk /dev/sdb
+	t > fd(Linux Raid Autodetect)
+2.5 레이드 구성
+	mdadm --create 레이드명 --level=레벨 --raid-devices=갯수 
+	멤버파티션 ...
+	mdadm --detail --scan
+3. 파일시스템 생성 = 포맷
+4. 마운트
+5. /etc/fstab 설정
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
