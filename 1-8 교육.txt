@@ -1,0 +1,121 @@
+LVM	논리디스크관리자
+
+PV: 물리볼륨
+	pvcreate
+	pvscan
+VG: 볼륨그룹
+	vgcreate
+	vgdisplay
+LV: 논리볼륨
+	lvcreate
+	lvscan
+
+1. 물리적 추가
+2. 파티션 생성(t: 8e)
+2.5 LVM: pv, vg, lv
+	pvcreate
+	vgcreate 볼륨그룹이름 pv ...
+	lvcreate --size 크기 --name 이름 볼륨그룹이름
+	lvcreate --size 1G --name myLV1 myVG
+3. 파일시스템 생성
+	mkfs.ext4 /dev/myVG/myLV1
+4. 마운트
+	mkdir /lvm1
+	mount /dev/myVG/myLV1 /lvm1
+5. /etc/fstab 수정
+=====
+Quota
+quotacheck	디스크를 스캔해서 체크 명령
+quotaon/quotaoff	쿼터 켜거나 끄는 명령
+edquota (사용자별/그룹별) 쿼터 편집
+quota		자신에게 할당된 디스크 공간 확인
+		grace: 유예기간
+repquota	사용자별 현재 사용량 확인
+edquota -p 기준사용자 대상사용자
+=====
+원격지 시스템 관리 = 원격 접속
+텔넷 서버
+SSH 서버
+XRDP 서버=VNC 서버
+=====
+서비스 설정 순서
+0. 설치 여부 확인
+1. 설치
+2. 환경설정
+3. 서비스 시작(상시가동)
+4. 방화벽 설정
+5. SELinux 설정
+-----
+6. 테스트
+
+포트번호=서비스 구분 번호
+텔넷	23
+
+0. rpm -qa telnet-server
+1. dnf install telnet-server
+3. systemctl start telnet.socket
+   systemctl enable telnet.socket
+   systemctl status telnet.socket
+4. firewall-cmd --permanent --add-service=telnet
+   firewall-cmd --reload
+   firewall-cmd --list-service
+-----
+telnet 주소
+=====
+SSH 서비스
+- 워크스테이션 설치: SSH 설치안되어 있음
+- 최소 설치: SSH 설치
+-----
+0. rpm -qa openssh-server
+1. dnf install openssh-server
+2. vi /etc/ssh/sshd_config
+3. systemctl status sshd
+   systemctl enable --now sshd
+4. firewall-cmd --permanent --add-service=ssh
+   firewall-cmd --reload
+   firewall-cmd --list-service
+=====
+XRDP 서버, VNC 서버: 그래픽 모드로 원격관리
+- 윈도우: RDP - 원격데스크톱연결
+-----
+0. rpm -qa xrdp
+1. dnf install epel-release 
+   dnf install xrdp
+3. systemctl start xrdp
+   systemctl enable xrdp
+4. firewall-cmd --permanent --add-port=3389/tcp
+   firewall-cmd --reload
+   firewall-cmd --list-ports
+-----
+클라이언트 
+원격데스크톱연결
+
+텔넷과 SSH 차이
+: 암호화 여부
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
