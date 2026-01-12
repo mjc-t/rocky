@@ -1,0 +1,207 @@
+메일 서버
+SMTP: 메일 송수신
+POP3:  클라이언트에서 메일을 가져올 때
+IMAP:          		//                  (메일 서버 남김)
+
+네트워크 서비스
+- 원격관리 서비스: Telnet(23), SSH(22), XRDP
+- 네임서버: DNS(TCP, UDP 53)
+- 웹 서버:   HTTP(80)
+
+네트워크 서비스
+0. 설치 여부
+1. 설치
+2. 환경설정
+3. 서비스 시작
+4. 방화벽 오픈
+5. SELinux
+-----
+클라이언트: 테스트
+
+메일 서버 전제조건
+- 호스트 네임 변경: hostnamectl set-hostname FQDN
+
+메일서버 구현시 필수 패키지: sendmail, sendmail-cf, dovecot
+1. dnf -y install sendmail sendmail-cf dovecot
+2. 환경설정
+/etc/mail/sendmail.cf
+/etc/mail/access
+makemap hash /etc/mail/access < /etc/mail/access
+/etc/dovecot/dovecot.conf
+/etc/dovecot/conf.d/10-ssl.conf
+/etc/dovecot/conf.d/10-mail.conf
+3. systemctl restart sendmail
+   systemctl enable sendmail
+   systemctl restart dovecot
+   systemctl enable dovecot
+4. firewall-cmd --permanent --add-service=smtp
+   firewall-cmd --permanent --add-service=pop3
+   firewall-cmd --permanent --add-service=imap
+   firewall-cmd --reload
+   firewall-cmd --list-services
+=====
+데이터베이스 서버
+1. 설치 
+   dnf -y install mariadb-server
+3. systemctl restart mariadb
+   systemctl enable mariadb
+4. firewall-cmd --permanent --add-service=mysql
+   firewall-cmd --reload
+   firewall-cmd --list-services
+-----
+원격 컴퓨터에서 접속
+mysql -h 주소 -u 사용자명 -p
+
+로컬 컴퓨터에서 접속
+mysql -u 사용자명 -p
+
+root 암호 지정
+mysqladmin -u root password 암호
+
+mariadb client
+: HeidiSQL, WorkBench, mariadb
+
+Client 컴퓨터
+su -
+dnf -y install mariadb
+mysql -h 192.168.111.100 -u root -p
+=====
+FTP Server
+: vsftp, proftp, pureftp
+공개 FTP = anonymous FTP
+비공개 FTP
+
+0. rpm -qa vsftpd
+1. dnf install vsftpd -y
+2. vi /etc/vsftpd/vsftpd.conf
+공개FTP 디렉터리: /var/ftp/
+3. systemctl restart vsftpd
+   systemctl enable vsftpd
+4. firewall-cmd --permanent --add-service=ftp
+   firewall-cmd --reload
+   firewall-cmd --list-services
+------
+FTP 명령어
+dir, ls
+cd, lcd, pwd
+get, mget
+put, mput
+bin, ascii
+hash
+=====
+NFS:		파일 공유-리눅스 사이
+SAMBA:	      //    -리눅스와 윈도우 사이
+
+1. dnf -y install nfs-utils
+2. vi /etc/exports
+	/share  *(rw,sync)
+   mkdir /share
+   chmod 707 /share
+3. systemctl restart nfs-server
+   systemctl enable nfs-server
+   exportfs -v 	공유여부 확인
+4. firewall-cmd --permanent --add-service=nfs
+   firewall-cmd --permanent --add-service=mountd
+   firewall-cmd --permanent --add-service=rpc-bind
+   firewall-cmd --reload
+   firewall-cmd --list-services
+=====
+nfs 클라이언트
+showmount -e 192.168.111.100
+mkdir myShare
+su -c 'mount -t nfs 192.168.111.100:/share myShare'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GRANT ALL ON *.* TO root@'%' IDENTIFIED BY '4321';
+                  DB.Table      주소,컴퓨터명          비밀번호
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
